@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Incremental</title>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <!--<link rel="stylesheet" href="css/bootstrap-dark.min.css">-->
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<nav class="navbar navbar-default" role="navigation">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1"><span class="sr-only">Toggle navigation</span><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span></button>
+            <a class="navbar-brand" href="#">Incremental</a>
+        </div>
+
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav">
+                <!--<li><a href="#">Link</a></li>-->
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">Game State <span class="caret"></span></a>
+                    <ul class="dropdown-menu" role="menu">
+                        <li><a onclick="require('save').save()" id="saveBtn" href="#">Save</a></li>
+                        <li><a onclick="require('save').load()" id="loadBtn" href="#">Load</a></li>
+                        <li class="divider"></li>
+                        <li><a onclick="require('save').clear()" href="#">Clear</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<div class="container-fluid">
+    <div class="row">
+        <div id="actions" class="col-sm-12 col-md-12"></div>
+    </div>
+    <div class="row">
+        <div id="information" class="col-sm-12 col-md-5">
+            <h4 style="display:none" id="resourceHead"><span class="glyphicon glyphicon-flash"></span> Resources</h4>
+            <table id="resourceTable" class="table table-condensed" style="display:none">
+                <tr data-resource="-1">
+                    <th>Name</th>
+                    <th style="text-align: right">Stored</th>
+                    <th style="text-align: right">Income / second</th>
+                </tr>
+            </table>
+
+            <h4 style="display:none" id="buildingHead"><span class="glyphicon glyphicon-home"></span> Buildings</h4>
+            <table id="buildingTable" class="table table-condensed" style="display:none">
+                <tr>
+                    <th>Name</th>
+                    <th style="text-align: right">Amount</th>
+                    <th>In</th>
+                    <th>Out</th>
+                    <th></th>
+                </tr>
+            </table>
+        </div>
+
+        <div class="clearfix visible-xs-block"></div>
+
+        <div id="buildings" class="col-sm-12 col-md-7">
+            <h4 style="display:none" id="jobHead"><span class="glyphicon glyphicon-user"></span> Workers</h4>
+            <table id="jobTable" class="table table-condensed" style="display:none">
+                <tr>
+                    <th></th>
+                    <th></th>
+                    <th>Name</th>
+                    <th style="text-align: right">Workers</th>
+                    <th>In</th>
+                    <th>Out</th>
+                    <th></th>
+                    <th></th>
+                </tr>
+            </table>
+        </div>
+
+
+    </div>
+</div>
+
+
+<!--<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>-->
+<script>window.jQuery || document.write('<script src="js/jquery.min.js"><\/script>')</script>
+<script src="js/bootstrap.min.js"></script>
+
+<script>
+    $('#buildingCategories a').click(function (e) {
+        e.preventDefault();
+        $(this).tab('show');
+    })
+</script>
+<script data-main="js/main" src="js/require.js"></script>
+</body>
+</html>

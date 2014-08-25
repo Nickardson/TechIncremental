@@ -1,0 +1,75 @@
+.tooltip-inner {
+    min-width: 200px;
+}
+
+.category {
+    float: left;
+    clear: right;
+    width: 100%;
+}
+
+.category h4 {
+    cursor: pointer;
+}
+
+.resource-value {
+    text-align: right;
+}
+
+tr.resfultr>td.resource-fullness {
+    padding: 1px;
+    height: 0;
+    border: 0;
+}
+
+.resource-fullness>.bar {
+    border-top: 1px solid #4e9c49;
+    height: 1px;
+    width: 0;
+}
+
+.cost-text, .income-text {
+    display: block;
+}
+
+.cost-text, .danger {
+    color: #cc3f3f;
+}
+
+.income-text {
+    color: #69b84a;
+}
+
+.text-muted {
+    font-style: italic;
+}
+
+.danger {
+    font-weight: bold;
+}
+
+.resource-change {
+    text-align: right;
+}
+
+.buildingFullness {
+    border-top: 0 !important;
+}
+
+.gameBtn {
+//    display: block;
+    margin-right: .2em;
+//    clear: left;
+//    float: left;
+    min-width: 18em;
+}
+
+.btn.disabled {
+    background-color: #e1e1e1 !important;
+    border-color: red !important;
+    pointer-events: auto;
+}
+
+.progress {
+    max-width: 50%;
+}
