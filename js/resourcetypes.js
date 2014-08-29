@@ -3,7 +3,8 @@ define({
         {
             name: "people",
             display: "People",
-            limit: 0
+            limit: 0,
+            image: true
         },
         {
             name: "twig",

@@ -13,7 +13,7 @@ define(["events"], function (events) {
         ["#9DCC1D", 80],
         ["#E0D909", 90],
         ["orange", 95],
-        ["#E34444", 100],
+        ["#E34444", 100]
     ];
 
     var render = {
@@ -85,6 +85,16 @@ define(["events"], function (events) {
 
                 parent.css("display", "");
                 $('#'+resource.type+'Head').css("display", "");
+
+                var img = $('<td></td>').appendTo(resource._element);
+                if (resource.image != undefined) {
+                    var src = resource.image;
+
+                    if (src === true) {
+                        src = "img/" + resource.name + ".png";
+                    }
+                    $("<img>").attr("src", src).appendTo(img);
+                }
 
                 if (resource.type == "job") {
                     $('<td><button class="btn btn-default btn-sm jobMinus" data-amount="5">-5</button></td>').appendTo(resource._element);
