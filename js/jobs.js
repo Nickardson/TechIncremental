@@ -156,5 +156,20 @@ define(["resources", "render", "events", "interact", "buildings"], function (res
         limit: 0
     }).unlockWhen(resources.condition.hasAmount("buildingMiner", 1));
 
+    jobs.create({
+        name: "jobIronSmelter",
+        display: "Iron Smelter",
+        in: [
+            {type: "food", amount: 2},
+            {type: "ironOre", amount: 0.1},
+            {type: "coal", amount: 0.5}
+        ],
+        out: [
+            {type: "iron", amount: 0.1}
+        ],
+        title: "Smelts iron ore into iron bars.",
+        limit: 0
+    }).unlockWhen(resources.condition.hasAmount("buildingSmeltery", 1));
+
     return jobs;
 });

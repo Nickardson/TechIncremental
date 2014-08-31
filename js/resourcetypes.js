@@ -54,15 +54,19 @@ define({
             image: true
         },
         {
+            name: "coal",
+            display: "Coal",
+            limit: 1000
+        },
+        {
             name: "ironOre",
             display: "Iron Ore",
             limit: 1000
         },
         {
-            name: "coal",
-            display: "Coal",
+            name: "iron",
+            display: "Iron",
             limit: 1000
         },
-
     ]
 });

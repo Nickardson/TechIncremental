@@ -284,6 +284,7 @@ define(["render", "resourcetypes", "events"], function (render, resourceTypes, e
         save: function () {
             var result = {};
 
+            // TODO: only save unmodified stats
             for (key in list) {
                 var res = list[key];
                 result[key] = {

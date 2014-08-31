@@ -167,6 +167,19 @@ define(["render", "events", "resources"], function (render, events, resources) {
             secretResults: true,
             condition: resources.condition.hasAmount("buildingBreadBakery", 1)
         },
+
+        {
+            name: "buildingSmeltery",
+            display: "Smeltery",
+            title: "Allows you to smelt ores into metal bars.",
+            category: "Resources",
+            cost: [
+                {type: "wood", amount: 10000},
+                {type: "stone", amount: 10000},
+                {type: "coal", amount: 50}
+            ],
+            output: {type: 'jobIronSmelter', capacity: 10}
+        },
     ];
 
     buildings.tick = function (res) {

@@ -1,4 +1,4 @@
-define(["resources", "render", "events", "interact", "buildings"], function (resources, render, events, interact, buildings) {
+define(["resources", "render", "events"], function (resources, render, events) {
     var research = {};
 
     research.types = {};
@@ -95,8 +95,6 @@ define(["resources", "render", "events", "interact", "buildings"], function (res
             tech.visible = 1;
 
             if (!tech._element) {
-                console.log("Rendering tech " + tech.name);
-
                 $("#researchHead,#researchTable").css('display', '');
 
                 var e = tech._element = $('<tr class="resource-row"></tr>').appendTo("#researchTable").data("resource", tech._index);
@@ -113,7 +111,6 @@ define(["resources", "render", "events", "interact", "buildings"], function (res
                 $('<td class="research-cost">'+research.costText(tech)+'</td>').appendTo(e);
 
                 $('<td><button class="research-btn btn btn-primary">Research</button><br/><span class="tech-effect">'+tech.effectText+'</span></td>').appendTo(e).find("button").click(function () {
-                    console.log("try research");
                     research.tryResearch(tech);
                 });
 
@@ -122,12 +119,9 @@ define(["resources", "render", "events", "interact", "buildings"], function (res
         };
 
         if (research.shown[tech.name] != 1 && !research.canUnlock(tech)) {
-            console.log("waiting for tech-condition ", tech.name);
-
             var tryShow = function () {
                 if (!research.shown[tech.name] && research.canUnlock(tech)) {
                     tech.show();
-                    console.log("Tech condition met:", tech.name);
                 }
             };
 
@@ -174,10 +168,22 @@ define(["resources", "render", "events", "interact", "buildings"], function (res
         }
     };
 
+    research.has = function (name) {
+        return research.types[name].researched;
+    };
+
+    research.condition = {
+        has: function (name) {
+            return function () {
+                return research.types[name].researched;
+            }
+        }
+    };
+
     research.create({
         name: "curiosity",
         display: "Curiosity",
-        title: "They say curiosity killed the cat, but we're not cats now, are we?",
+        title: "They say curiosity killed the cat, but we should be fine.",
         effectText: "Leads to great things."
     });
 
@@ -214,8 +220,8 @@ define(["resources", "render", "events", "interact", "buildings"], function (res
     research.create({
         name: "writing",
         display: "Writing",
-        title: "We probably should have learned how to write before building a library.  That would probably help our researchers.",
-        effectText: "Increases Researcher yield by +400%.",
+        title: "We probably should have learned how to write before building a library.",
+        effectText: "Increases Researcher yield by 400%.",
         effect: function () {
             var job = resources.get("jobResearcher");
             job.userdata.multiplier += 4.00;
@@ -236,7 +242,7 @@ define(["resources", "render", "events", "interact", "buildings"], function (res
             job.userdata.multiplier += 1.00;
             render.renderResource(resources, job);
         },
-        cost: 0,
+        cost: 300,
         requires: "writing"
     });
 
