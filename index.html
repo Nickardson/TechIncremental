@@ -25,6 +25,9 @@
                         <li><a onclick="require('save').save()" id="saveBtn" href="#">Save</a></li>
                         <li><a onclick="require('save').load()" id="loadBtn" href="#">Load</a></li>
                         <li class="divider"></li>
+                        <li><a onclick="prompt('Your code, keep it in a safe spot!', require('save').export())" id="exportBtn" href="#">Export</a></li>
+                        <li><a onclick="require('save').import(prompt('Input your code.'))" id="importBtn" href="#">Import</a></li>
+                        <li class="divider"></li>
                         <li><a onclick="require('save').clear()" href="#">Clear</a></li>
                     </ul>
                 </li>
@@ -79,6 +82,9 @@
                     <th></th>
                 </tr>
             </table>
+
+            <h4 style="display:none" id="researchHead">Research</h4>
+            <table id="researchTable" class="table table-condensed" style="display:none"></table>
         </div>
 
 

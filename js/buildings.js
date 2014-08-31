@@ -2,16 +2,19 @@ define(["render", "events", "resources"], function (render, events, resources) {
     var buildings = {};
 
     buildings.types = [
+        {name: "cheathouse",display: "CheatHouse 2.0",title: "M@d HAX0Rz"},
+
         {
             name: "hut",
             display: "Hut",
             title: "There's only one person here, but more are sure to move in.",
             category: "Citizens",
-            out: {type: 'people', amount: 0.01},
+            out: {type: 'people', amount: resources.modifiers.mult(0.01, 'hut')},
             cost: [
                 {type: "wood", amount: 5}
             ],
-            output: {type: "people", amount: 1, capacity: 5}
+            output: {type: "people", amount: 1, capacity: 10},
+            image: true
         },
         {
             name: "stonePit",
@@ -23,7 +26,8 @@ define(["render", "events", "resources"], function (render, events, resources) {
                 {type: "wood", amount: 25}
             ],
             condition: resources.condition.hasAmount("hut", 1),
-            output: {type: 'jobStonePit', capacity: 5}
+            output: {type: 'jobStonePit', capacity: 5},
+            image: true
         },
 
         {
@@ -38,7 +42,8 @@ define(["render", "events", "resources"], function (render, events, resources) {
             output: [
                 {type: "wood", capacity: 200},
                 {type: "stone", capacity: 200}
-            ]
+            ],
+            image: true
         },
 
         {
@@ -50,7 +55,8 @@ define(["render", "events", "resources"], function (render, events, resources) {
                 {type: "wood", amount: 200},
                 {type: "stone", amount: 200}
             ],
-            output: {type: 'jobWheatFarmer', capacity: 20}
+            output: {type: 'jobWheatFarmer', capacity: 20},
+            image: true
         },
 
         {
@@ -63,7 +69,8 @@ define(["render", "events", "resources"], function (render, events, resources) {
                 {type: "stone", amount: 500},
                 {type: 'wheat', amount: 25}
             ],
-            output: {type: 'jobMiller', capacity: 10}
+            output: {type: 'jobMiller', capacity: 20},
+            image: true
         },
         {
             name: "buildingWaterMill",
@@ -75,7 +82,8 @@ define(["render", "events", "resources"], function (render, events, resources) {
                 {type: "wood", amount: 500},
                 {type: "stone", amount: 200}
             ],
-            condition: resources.condition.hasAmount("buildingMill", 1)
+            condition: resources.condition.hasAmount("buildingMill", 1),
+            image: true
         },
         {
             name: "buildingBreadBakery",
@@ -84,10 +92,80 @@ define(["render", "events", "resources"], function (render, events, resources) {
             category: "Food",
             cost: [
                 {type: "wood", amount: 500},
-                {type: "stone", amount: 200},
-                {type: "flour", amount: 50}
+                {type: "stone", amount: 200}
             ],
-            output: {type: 'jobBaker', capacity: 10}
+            output: {type: 'jobBaker', capacity: 20},
+            condition: resources.condition.hasAmount("buildingMill", 1),
+            image: true
+        },
+
+        {
+            name: "buildingLibrary",
+            display: "Library",
+            title: "A center for learning.  Allows you to assign researchers and get some sweet science.",
+            category: "Science",
+            cost: [
+                {type: "wood", amount: 1000},
+                {type: "stone", amount: 800}
+            ],
+            output: {
+                type: 'jobResearcher',
+                capacity: 5
+            },
+            condition: resources.condition.hasAmount("buildingBreadBakery", 1)
+        },
+
+        {
+            name: "buildingForester",
+            display: "Forester's Quarters",
+            title: "Allows you to assign foresters.",
+            category: "Resources",
+            cost: [
+                {type: "wood", amount: 2000},
+                {type: "stone", amount: 400},
+                {type: "food", amount: 100}
+            ],
+            output: {type: 'jobForester', capacity: 10}
+        },
+        {
+            name: "buildingMiner",
+            display: "Miner's Quarters",
+            title: "Allows you to assign miners.",
+            category: "Resources",
+            cost: [
+                {type: "wood", amount: 5000},
+                {type: "stone", amount: 600},
+                {type: "food", amount: 1000}
+            ],
+            output: [
+                {type: 'jobMiner', capacity: 40},
+                {type: 'jobIronMiner', capacity: 40},
+                {type: 'jobCoalMiner', capacity: 40},
+            ],
+            condition: resources.condition.hasAmount("buildingForester", 1)
+        },
+
+        {
+            name: "buildingStorehouse",
+            display: "Storehouse",
+            title: "Stores a variety of materials.",
+            category: "Resources",
+            cost: [
+                {type: "wood", amount: 2500},
+                {type: "stone", amount: 2500}
+            ],
+            output: [
+                {type: "wood", capacity: 10000},
+                {type: "stone", capacity: 10000},
+                {type: "wheat", capacity: 1000},
+                {type: "flour", capacity: 1000},
+                {type: "food", capacity: 10000},
+                {type: "ironOre", capacity: 1000},
+                {type: "coal", capacity: 1000},
+            ],
+            resultText: "+10k capacity for <em>Wood, Stone, and Food</em>,<br/>+1k capactity for other common materials.",
+            secretResults: true,
+            condition: resources.condition.hasAmount("buildingBreadBakery", 1)
         },
     ];
 

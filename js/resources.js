@@ -157,12 +157,17 @@ define(["render", "resourcetypes", "events"], function (render, resourceTypes, e
         canBuy: function (currencies, multiplier) {
             multiplier = multiplier || 1;
 
+            if (!currencies) {
+                return false;
+            }
+
             if (currencies.length == undefined) {
                 currencies = [currencies];
             }
 
             for (var i = 0; i < currencies.length; i++) {
-                if (resources.value(currencies[i].type) < currencies[i].amount * multiplier) {
+                var c = currencies[i];
+                if (resources.value(events.prop(c, 'type', multiplier)) < events.prop(c, 'amount', multiplier) * multiplier) {
                     return false;
                 }
             }
@@ -176,7 +181,9 @@ define(["render", "resourcetypes", "events"], function (render, resourceTypes, e
          * @param direction The way money is flowing, 1 for adding resources, -1 for removing.
          */
         transact: function (currencies, direction) {
-            if (currencies.length == undefined) {
+            if (typeof currencies == 'function') {
+                currencies = currencies(direction);
+            } else if (typeof currencies == 'object' && currencies.length == undefined) {
                 currencies = [currencies];
             }
             direction = direction || 1;
@@ -185,10 +192,10 @@ define(["render", "resourcetypes", "events"], function (render, resourceTypes, e
                 var c = currencies[i];
 
                 if (c.capacity !== undefined)
-                    resources.addLimit(c.type, c.capacity * direction);
+                    resources.addLimit(events.prop(c, 'type', direction), events.prop(c, 'capacity', direction) * direction);
 
                 if (c.amount !== undefined)
-                    resources.add(c.type, c.amount * direction);
+                    resources.add(events.prop(c, 'type', direction), events.prop(c, 'amount', direction) * direction);
             }
         },
 
@@ -248,6 +255,22 @@ define(["render", "resourcetypes", "events"], function (render, resourceTypes, e
              * @returns {boolean}
              */
             none: function(){return true;}
+        },
+
+        modifiers: {
+            /**
+             * A modifier which multiplies a given value by the given resource's 'multiplier' userdata.
+             * @param original The base amount
+             * @param name The name of the resource whose multiplier affects this mod.
+             * @returns {Function}
+             */
+            mult: function (original, name) {
+                return function () {
+                    var u = resources.get(name).userdata;
+                    u.multiplier = u.multiplier || 1;
+                    return original * u.multiplier;
+                }
+            }
         },
 
         all: function () {

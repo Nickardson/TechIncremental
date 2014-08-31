@@ -10,6 +10,8 @@ define(function (require) {
         save = require("save"),
         events = require("events");
 
+    render.isStartup = true;
+
     for (var i = 0; i < buildings.types.length; i++) {
         var t = buildings.types[i];
         t.building = true;
@@ -33,7 +35,8 @@ define(function (require) {
         title: "Mash 5 twigs together to make a wood."
     });
 
-    var jobs = require("jobs");
+    var jobs = require("jobs"),
+        research = require("research");
 
 
     save.setVersion("0.0");
@@ -52,4 +55,6 @@ define(function (require) {
 
         resources.enforceLimits();
     }, 1000);
+
+    render.isStartup = false;
 });

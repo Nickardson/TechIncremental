@@ -12,6 +12,13 @@ define(function () {
             sub.apply(void 0, args); //call each method listening on the channel
         });
     };
+    exports.prop = function (object, name, args) {
+        if (typeof object[name] == "function") {
+            return object[name].call(object, args);
+        } else {
+            return object[name];
+        }
+    };
 
     return exports;
 });

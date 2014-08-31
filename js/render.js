@@ -4,6 +4,23 @@
 
 define(["events"], function (events) {
 
+    jQuery.fn.highlight = function () {
+        $(this).each(function () {
+            var el = $(this);
+            $("<div/>")
+                .width(el.outerWidth())
+                .height(el.outerHeight())
+                .css({
+                    "position": "absolute",
+                    "left": el.offset().left,
+                    "top": el.offset().top,
+                    "background-color": "#ffff99",
+                    "opacity": ".7",
+                    "z-index": "9999999"
+                }).appendTo('body').fadeOut(1000).queue(function () { $(this).remove(); });
+        });
+    }
+
     var RED = "#ab3e3e",
         GREEN = "#4e9c49";
 
@@ -17,6 +34,8 @@ define(["events"], function (events) {
     ];
 
     var render = {
+        isStartup: false,
+
         suffixes: [
             [1000, "k"],
             [1000000, "M"],
@@ -74,99 +93,154 @@ define(["events"], function (events) {
             return x;
         },
 
+        subRenderImage: function (resource) {
+            var img = $('<td></td>').appendTo(resource._element);
+            if (resource.image != undefined) {
+                var src = resource.image;
+
+                if (src === true) {
+                    src = "img/" + resource.name + ".png";
+                }
+                $("<img>").attr("src", src).appendTo(img);
+            }
+        },
+
+        subRenderJobStart: function (resource) {
+            $('<td><button class="btn btn-default btn-sm jobMinus" data-amount="5">-5</button></td>').appendTo(resource._element);
+            $('<td><button class="btn btn-default btn-sm jobMinus" data-amount="1">-</button></td>').appendTo(resource._element);
+
+            if (resource.title) {
+                resource._element.attr("title", resource.title);
+            }
+        },
+
+        subRenderJobEnd: function (resource) {
+            $('<td><button class="btn btn-default btn-sm jobPlus" data-amount="1">+</button></td>').appendTo(resource._element);
+            $('<td><button class="btn btn-default btn-sm jobPlus" data-amount="5">+5</button></td>').appendTo(resource._element);
+        },
+
+        subRenderResourceAmount: function (resource, parent) {
+            if (resource.type == "resource") {
+                $('<td class="resource-change income-text">+0/s</td>').appendTo(resource._element);
+
+                resource._fullness = $('<tr class="resource-row resfultr"><td colspan="4" class="resource-fullness"><div class="bar"></div></td></tr>').data("resource", resource._index).appendTo(parent);
+            }
+        },
+
+        applyTooltip: function (element, title) {
+            element.attr("title", title);
+
+            element.tooltip({
+                container: 'body',
+                placement: 'right',
+                html: true
+            });
+        },
+
+        getBuildingTooltip: function (resource, resources) {
+            var title = [];
+
+            if (resource.title) {
+                title.push(resource.title + '<br/>');
+            }
+
+            if (resource.cost != undefined) {
+                title.push(render.resourcesToText(resources, resource.cost, false, 1, false));
+            }
+
+            if (resource.secretResults) {
+                title.push(resource.resultText ? ('<span class="text-info">'+resource.resultText+'</span>') : '???');
+                return title.join('');
+            }
+
+            if (resource.output != undefined) {
+                title.push(render.resourcesToText(resources, resource.output, true, 1, false));
+            }
+            if (resource.in != undefined) {
+                title.push(render.resourcesToText(resources, resource.in, false, 1, true));
+            }
+            if (resource.out != undefined) {
+                title.push(render.resourcesToText(resources, resource.out, true, 1, true));
+            }
+
+            return title.join('');
+        },
+
+        sortResources: function (parent) {
+            parent.find('tr.resource-row').sort(function(a,b) {
+                var r1 = $(a).data("resource") * 1,
+                    r2 = $(b).data("resource") * 1;
+                var r = r1 > r2 ? 1 : -1;
+
+                if (r1 == r2) {
+                    return ($(a).hasClass("resfultr")) ? 1 : -1;
+                } else {
+                    return r;
+                }
+            }).appendTo(parent);
+        },
+
+        subRenderName: function (resource) {
+            $('<td class="resource-name"></td>').html(resource.display).appendTo(resource._element);
+        },
+
+        subRenderValue: function (resource) {
+            $('<td class="resource-value"></td>').appendTo(resource._element);
+        },
+
         renderResource: function (resources, resource) {
             if (!resource.visible) {
                 return;
             }
             if (!resource._hasElement) {
                 resource._hasElement = true;
+
+                // add row to respective table
                 var parent = $('#' + (resource.type) + 'Table');
                 resource._element = $('<tr class="resource-row"></tr>').data("resource", resource._index).appendTo(parent);
 
+                // show container
                 parent.css("display", "");
                 $('#'+resource.type+'Head').css("display", "");
 
-                var img = $('<td></td>').appendTo(resource._element);
-                if (resource.image != undefined) {
-                    var src = resource.image;
+                // image
+                render.subRenderImage(resource);
 
-                    if (src === true) {
-                        src = "img/" + resource.name + ".png";
-                    }
-                    $("<img>").attr("src", src).appendTo(img);
-                }
+                // job minus
+                if (resource.type == "job") {render.subRenderJobStart(resource);}
 
-                if (resource.type == "job") {
-                    $('<td><button class="btn btn-default btn-sm jobMinus" data-amount="5">-5</button></td>').appendTo(resource._element);
-                    $('<td><button class="btn btn-default btn-sm jobMinus" data-amount="1">-</button></td>').appendTo(resource._element);
+                render.subRenderName(resource);
 
-                    if (resource.title) {
-                        resource._element.attr("title", resource.title);
-                    }
-                }
+                // Singleton doesn't have a value worth speaking of
+                // TODO: indicate we have one
+                if (resource.singleton !== true) {render.subRenderValue(resource);}
 
-                $('<td class="resource-name"></td>').html(resource.display).appendTo(resource._element);
-                $('<td class="resource-value"></td>').appendTo(resource._element);
-
-                if (resource.type == "resource") {
-                    $('<td class="resource-change income-text">+0/s</td>').appendTo(resource._element);
-
-                    resource._fullness = $('<tr class="resource-row resfultr"><td colspan="3" class="resource-fullness"><div class="bar"></div></td></tr>').data("resource", resource._index).appendTo(parent);
-                }
+                // income and fullness
+                render.subRenderResourceAmount(resource, parent);
 
                 if (resource.type == "building" || resource.type == "job") {
-                    $('<td class="cost-ps">~</td>').appendTo(resource._element);
-                    $('<td class="income-ps">~</td>').appendTo(resource._element);
+                    $('<td class="cost-ps"></td>').appendTo(resource._element);
+                    $('<td class="income-ps"></td>').appendTo(resource._element);
                 }
 
                 if (resource.type == "job") {
-                    $('<td><button class="btn btn-default btn-sm jobPlus" data-amount="1">+</button></td>').appendTo(resource._element);
-                    $('<td><button class="btn btn-default btn-sm jobPlus" data-amount="5">+5</button></td>').appendTo(resource._element);
+                    // job plus
+                    render.subRenderJobEnd(resource);
                 } else if (resource.type == "building") {
                     var t = $('<td><button class="btn btn-default btn-sm buildBuilding" data-amount="1">+</button></td>').appendTo(resource._element);
-                    var title = [];
-
-                    if (resource.title) {
-                        title.push(resource.title + '<br/>');
-                    }
-
-                    if (resource.cost != undefined) {
-                        title.push(render.resourcesToText(resources, resource.cost, false, 1, false));
-                    }
-                    if (resource.output != undefined) {
-                        title.push(render.resourcesToText(resources, resource.output, true, 1, false));
-                    }
-                    if (resource.in != undefined) {
-                        title.push(render.resourcesToText(resources, resource.in, false, 1, true));
-                    }
-                    if (resource.out != undefined) {
-                        title.push(render.resourcesToText(resources, resource.out, true, 1, true));
-                    }
-
-                    var btn = t.find("button");
-                    btn.attr("title", title.join(''));
-
-                    btn.tooltip({
-                        container: 'body',
-                        placement: 'right',
-                        html: true
-                    });
+                    render.applyTooltip(t.find("button"), render.getBuildingTooltip(resource, resources));
                 }
 
                 events.send("first-render-resource", resource);
 
                 // re-sort
-                parent.find('tr.resource-row').sort(function(a,b) {
-                    var r1 = $(a).data("resource") * 1,
-                        r2 = $(b).data("resource") * 1;
-                    var r = r1 > r2 ? 1 : -1;
+                render.sortResources(parent);
 
-                    if (r1 == r2) {
-                        return ($(a).hasClass("resfultr")) ? 1 : -1;
-                    } else {
-                        return r;
-                    }
-                }).appendTo(parent);
+                if (!render.isStartup) {
+                    setTimeout(function () {
+                        resource._element.highlight();
+                    }, 100);
+                }
             }
             var val = render.pretty(resource.value);
 
@@ -181,7 +255,7 @@ define(["events"], function (events) {
                 val += " / " + render.pretty(resource.limit);
 
                 if (resource._fullness) {
-                    var fullness = Math.floor((resource.value / resource.limit) * 100);
+                    var fullness = Math.min(100, Math.floor((resource.value / resource.limit) * 100));
                     var bar = resource._fullness.find(".bar");
                     bar.css("width", fullness + '%');
 
@@ -247,20 +321,21 @@ define(["events"], function (events) {
                 if (o.visible == false) {
                     continue;
                 }
+
                 if (o.amount) {
-                    var s = sign + render.pretty(o.amount*mult) + ' ' + resources.display(o.type);
+                    var s = sign + render.pretty(events.prop(o, 'amount', mult) * mult) + ' ' + resources.display(events.prop(o, 'type', mult));
                     if (isPerSecond) {
                         s += "/s";
                     }
                     ls.push(s);
                 }
                 if (o.capacity) {
-                    ls.push(sign + render.pretty(o.capacity*mult) + ' Max ' + resources.display(o.type));
+                    ls.push(sign + render.pretty(events.prop(o, 'capacity', mult) * mult) + ' Max ' + resources.display(events.prop(o, 'type', mult)));
                 }
             }
 
-            for (var i = 1; i < ls.length; i+=2) {
-                ls[i] += '<br/>'
+            for (var i = 2; i < ls.length; i+=2) {
+                ls[i] = '<br/>' + ls[i];
             }
 
             return '<span class="' + (gray ? "text-muted " : (isIncome ? 'income-text' : "cost-text")) + '">' + ls.join(", ") + '</span>';

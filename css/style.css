@@ -1,5 +1,5 @@
 .tooltip-inner {
-    min-width: 200px;
+    min-width: 300px;
 }
 
 .category {
@@ -64,10 +64,30 @@ tr.resfultr>td.resource-fullness {
     min-width: 18em;
 }
 
-.btn.disabled {
+.buildBuilding.disabled, .gameBtn.disabled, .jobPlus.disabled, .jobMinus.disabled {
     background-color: #e1e1e1 !important;
     border-color: red !important;
     pointer-events: auto;
+}
+
+.completed-research-btn:before {
+    content: "\e067";
+    font-family: 'Glyphicons Halflings';
+    font-size: 12px;
+    margin-right: 10px;
+}
+
+.research-name {
+    font-size: 1.5em;
+}
+
+.tech-completed>tr>.research-name {
+    color: gray;
+    font-style: italic;
+}
+
+.tech-effect {
+    font-style: italic;
 }
 
 .progress {
