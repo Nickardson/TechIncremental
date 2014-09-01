@@ -81,7 +81,7 @@ tr.resfultr>td.resource-fullness {
     font-size: 1.5em;
 }
 
-.tech-completed>tr>.research-name {
+.tech-completed>td>.research-name {
     color: gray;
     font-style: italic;
 }

@@ -38,6 +38,14 @@ define(function (require) {
     var jobs = require("jobs"),
         research = require("research");
 
+    // TODO: save state of hide researched button
+    $("#hideResearched").change(function () {
+        if (this.checked) {
+            $(".tech-completed").hide();
+        } else {
+            $(".tech-completed").show();
+        }
+    });
 
     save.setVersion("0.0");
     save.load();

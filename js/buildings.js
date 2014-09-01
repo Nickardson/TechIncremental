@@ -1,4 +1,4 @@
-define(["render", "events", "resources"], function (render, events, resources) {
+define(["render", "events", "resources", "research"], function (render, events, resources, research) {
     var buildings = {};
 
     buildings.types = [
@@ -25,7 +25,8 @@ define(["render", "events", "resources"], function (render, events, resources) {
             cost: [
                 {type: "wood", amount: 25}
             ],
-            condition: resources.condition.hasAmount("hut", 1),
+            condition: research.condition.has("woodTools"),
+            trigger: "research",
             output: {type: 'jobStonePit', capacity: 5},
             image: true
         },
@@ -140,7 +141,7 @@ define(["render", "events", "resources"], function (render, events, resources) {
             output: [
                 {type: 'jobMiner', capacity: 40},
                 {type: 'jobIronMiner', capacity: 40},
-                {type: 'jobCoalMiner', capacity: 40},
+                {type: 'jobCoalMiner', capacity: 40}
             ],
             condition: resources.condition.hasAmount("buildingForester", 1)
         },
@@ -161,7 +162,7 @@ define(["render", "events", "resources"], function (render, events, resources) {
                 {type: "flour", capacity: 1000},
                 {type: "food", capacity: 10000},
                 {type: "ironOre", capacity: 1000},
-                {type: "coal", capacity: 1000},
+                {type: "coal", capacity: 1000}
             ],
             resultText: "+10k capacity for <em>Wood, Stone, and Food</em>,<br/>+1k capactity for other common materials.",
             secretResults: true,
@@ -179,7 +180,7 @@ define(["render", "events", "resources"], function (render, events, resources) {
                 {type: "coal", amount: 50}
             ],
             output: {type: 'jobIronSmelter', capacity: 10}
-        },
+        }
     ];
 
     buildings.tick = function (res) {
@@ -224,7 +225,7 @@ define(["render", "events", "resources"], function (render, events, resources) {
 
         if (con) {
             // weird hacky bit because of how anon functions perform in loops
-            events.bind("resource", function(building, con) {
+            events.bind(t.trigger || "resource", function(building, con) {
                 return function () {
                     if (!building.visible && con()) {
                         building.visible = 1;

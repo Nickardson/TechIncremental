@@ -31,6 +31,10 @@ define(["resources", "render", "events"], function (resources, render, events) {
         tech.researched = 1;
         tech._element.addClass("tech-completed");
         tech._element.find(".research-btn").removeClass("btn-primary").addClass("disabled btn-success completed-research-btn").html("Researched");
+
+        if ($("#hideResearched")[0].checked) {
+            tech._element.hide();
+        }
     }
 
     research.tryResearch = function (tech) {
@@ -185,6 +189,19 @@ define(["resources", "render", "events"], function (resources, render, events) {
         display: "Curiosity",
         title: "They say curiosity killed the cat, but we should be fine.",
         effectText: "Leads to great things."
+    });
+
+    research.create({
+        name: "woodTools",
+        display: "Wooden Tools",
+        title: "Wood - The strongest material known to modern science.",
+        effectText: "Unlocks the Stone Pit.",
+        cost: [
+            {type: "twig", amount: 1},
+            {type: "wood", amount: 1}
+        ],
+        requires: "curiosity",
+        condition: resources.condition.hasAmount("wood", 1)
     });
 
     research.create({
