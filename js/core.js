@@ -42,9 +42,10 @@ define(function (require) {
     save.setVersion("0.0");
     save.load();
     events.send("load");
-    save.saveLoop(60);
+    save.saveLoop(120);
     save.saveOnClose();
 
+    var gaTicks = 0;
     GAMELOOP = setInterval(function () {
         resources.adds = {};
         resources.isBuildingTick = true;
@@ -54,6 +55,14 @@ define(function (require) {
         render.updateBuildings(resources);
 
         resources.enforceLimits();
+
+        gaTicks++;
+        if (gaTicks > 60 * 5) {
+            gaTicks = 0;
+            try {
+                ga('send', 'event', 'timed', 'tick', 60 * 5);
+            } catch (e) {}
+        }
     }, 1000);
 
     render.isStartup = false;
