@@ -25,8 +25,7 @@ define(["render", "events", "resources", "research"], function (render, events, 
             cost: [
                 {type: "wood", amount: 25}
             ],
-            condition: research.condition.has("woodTools"),
-            trigger: "research",
+            condition: research.condition.has("woodTools"),trigger: "research",
             output: {type: 'jobStonePit', capacity: 5},
             image: true
         },
@@ -56,7 +55,8 @@ define(["render", "events", "resources", "research"], function (render, events, 
                 {type: "wood", amount: 200},
                 {type: "stone", amount: 200}
             ],
-            output: {type: 'jobWheatFarmer', capacity: 20},
+            output: {type: 'jobWheatFarmer', capacity: 50},
+            condition: research.condition.has("agriculture"),trigger: "research",
             image: true
         },
 
@@ -123,10 +123,10 @@ define(["render", "events", "resources", "research"], function (render, events, 
             category: "Resources",
             cost: [
                 {type: "wood", amount: 2000},
-                {type: "stone", amount: 400},
-                {type: "food", amount: 100}
+                {type: "stone", amount: 400}
             ],
-            output: {type: 'jobForester', capacity: 10}
+            output: {type: 'jobForester', capacity: 10},
+            condition: research.condition.has("stoneTools"),trigger: "research"
         },
         {
             name: "buildingMiner",
@@ -135,15 +135,14 @@ define(["render", "events", "resources", "research"], function (render, events, 
             category: "Resources",
             cost: [
                 {type: "wood", amount: 5000},
-                {type: "stone", amount: 600},
-                {type: "food", amount: 1000}
+                {type: "stone", amount: 600}
             ],
             output: [
                 {type: 'jobMiner', capacity: 40},
                 {type: 'jobIronMiner', capacity: 40},
                 {type: 'jobCoalMiner', capacity: 40}
             ],
-            condition: resources.condition.hasAmount("buildingForester", 1)
+            condition: research.condition.has("stoneTools"),trigger: "research",
         },
 
         {

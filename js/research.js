@@ -220,6 +220,16 @@ define(["resources", "render", "events"], function (resources, render, events) {
     });
 
     research.create({
+        name: "agriculture",
+        display: "Agriculture",
+        title: "Agriculture is the science of planting crops and raising animals.",
+        effectText: "Unlocks Wheat Farms.",
+        cost: {type: "stone", amount: 10},
+        requires: "curiosity",
+        condition: resources.condition.hasSeen("stone")
+    });
+
+    research.create({
         name: "stoneaffinity",
         display: "Stone Affinity",
         title: "You rock.",
@@ -244,9 +254,18 @@ define(["resources", "render", "events"], function (resources, render, events) {
             job.userdata.multiplier += 4.00;
             render.renderResource(resources, job);
         },
-        cost: 10,
+        cost: 5,
         requires: "curiosity",
-        condition: resources.condition.hasSeen("buildingLibrary")
+        condition: resources.condition.hasAmount("jobResearcher", 1)
+    });
+
+    research.create({
+        name: "stoneTools",
+        display: "Stone Tools",
+        title: "The best thing since sliced wood!",
+        effectText: "Unlocks Quarters for Foresters and Miners, high-output resource gatherers which require food to work.",
+        cost: 20,
+        requires: "writing"
     });
 
     research.create({
@@ -259,7 +278,7 @@ define(["resources", "render", "events"], function (resources, render, events) {
             job.userdata.multiplier += 1.00;
             render.renderResource(resources, job);
         },
-        cost: 300,
+        cost: 30,
         requires: "writing"
     });
 

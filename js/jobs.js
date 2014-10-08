@@ -76,7 +76,7 @@ define(["resources", "render", "events", "interact", "buildings"], function (res
     jobs.create({
         name: "jobWheatFarmer",
         display: "Wheat Farmer",
-        out: {type: "wheat", amount: mod.mult(0.05, 'jobWheatFarmer')},
+        out: {type: "wheat", amount: mod.mult(0.02, 'jobWheatFarmer')},
         title: "Works the fields, planting and harvesting wheat.",
         limit: 0
     }).unlockWhen(resources.condition.hasAmount("wheatFarm", 1));
